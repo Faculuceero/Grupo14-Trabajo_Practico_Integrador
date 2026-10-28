@@ -1,7 +1,6 @@
 Grupo14-Trabajo_Practico_Integrador
 
 Integrantes:
- Nombre y Apellido | DNI | Correo Electrónico 
  Lucero Facundo | 46.887.409 | faculucero035@gmail.com 
  Migliorini Nicolas | 46.454.320 | nicomigliorini010@gmail.com 
  Coero Borga German | 44.472.805 | germancoeroborga5@gmail.com 

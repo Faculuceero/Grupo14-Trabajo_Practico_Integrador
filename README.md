@@ -1,10 +1,10 @@
 Grupo14-Trabajo_Practico_Integrador
 
 Integrantes:
- Lucero Facundo | 46.887.409 | faculucero035@gmail.com 
- Migliorini Nicolas | 46.454.320 | nicomigliorini010@gmail.com 
- Coero Borga German | 44.472.805 | germancoeroborga5@gmail.com 
- Coero Borga Andres | 44.472.804 | andrescoero@gmail.com 
+Lucero Facundo | 46.887.409 | faculucero035@gmail.com 
+Migliorini Nicolas | 46.454.320 | nicomigliorini010@gmail.com 
+Coero Borga German | 44.472.805 | germancoeroborga5@gmail.com 
+Coero Borga Andres | 44.472.804 | andrescoero@gmail.com 
 
  Justificación del Trabajo
  Patrón Strategy: Se utiliza el patron Strategy para encapsular y desacoplar los diferentes modelos de la Inteligencia Artificial como comportamientos intercambiables.

@@ -9,4 +9,5 @@ from enum import Enum
 
 
 class TipoRol(Enum):
-    pass  # TODO: agregar ADMIN y USUARIO_GENERAL
+    ADMIN = "ADMIN"
+    USUARIO_GENERAL = "USUARIO_GENERAL"

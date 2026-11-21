@@ -17,9 +17,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from plataforma_qa.publicaciones.tipo_voto import TipoVoto
+
 if TYPE_CHECKING:
     from plataforma_qa.autores.usuario import Usuario
-    from plataforma_qa.publicaciones.tipo_voto import TipoVoto
 
 
 class Voto:

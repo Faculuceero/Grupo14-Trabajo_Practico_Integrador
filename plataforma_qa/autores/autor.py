@@ -11,6 +11,7 @@ from abc import ABC
 
 class Autor(ABC):
     def __init__(self, id: int, nombre_visible: str) -> None:
-        # TODO: impedir que se instancie directamente (es abstracta)
+        if type(self) is Autor:
+            raise TypeError("Autor es abstracta: no se puede instanciar directamente.")
         self._id = id                            # #id: Int
         self._nombre_visible = nombre_visible    # #nombreVisible: String

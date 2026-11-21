@@ -9,5 +9,6 @@ Una Pregunta puede tener varias Etiquetas, o ninguna (ej: ia-help).
 
 class Etiqueta:
     def __init__(self, nombre: str) -> None:
-        # TODO: no permitir un nombre vacío
+        if not nombre or not nombre.strip():
+            raise ValueError("El nombre de la etiqueta no puede estar vacío.")
         self._nombre = nombre  # -nombre: String

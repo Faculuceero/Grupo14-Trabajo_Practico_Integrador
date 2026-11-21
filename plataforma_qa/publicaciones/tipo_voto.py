@@ -9,4 +9,5 @@ from enum import Enum
 
 
 class TipoVoto(Enum):
-    pass  # TODO: agregar POSITIVO y NEGATIVO
+    POSITIVO = "POSITIVO"
+    NEGATIVO = "NEGATIVO"

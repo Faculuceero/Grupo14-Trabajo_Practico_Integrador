@@ -7,7 +7,7 @@ Issue: "Implementar la clase FabricaAgenteIA"
 from __future__ import annotations
 
 from plataforma_qa.autores.agente_ia import AgenteIA
-from plataforma_qa.autores.fabrica_autor import FabricaAutor
+from plataforma_qa.fabricas.fabrica_autor import FabricaAutor
 
 
 class FabricaAgenteIA(FabricaAutor):

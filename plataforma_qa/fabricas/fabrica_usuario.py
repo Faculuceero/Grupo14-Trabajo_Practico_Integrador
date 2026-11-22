@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import hashlib
 
-from plataforma_qa.autores.fabrica_autor import FabricaAutor
+from plataforma_qa.fabricas.fabrica_autor import FabricaAutor
 from plataforma_qa.autores.rol import Rol
 from plataforma_qa.autores.tipo_rol import TipoRol
 from plataforma_qa.autores.usuario import Usuario

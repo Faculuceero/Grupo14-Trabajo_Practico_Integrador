@@ -7,7 +7,7 @@ Clase base de Pregunta y Respuesta. Guarda el cuerpo, la fecha y los votos.
 """
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from datetime import datetime
 from typing import TYPE_CHECKING
 
@@ -41,7 +41,6 @@ class Publicacion(ABC):
         """Método auxiliar: registra un voto recibido."""
         self._votos.append(voto)
 
-    @abstractmethod
     def calcular_puntuacion(self) -> int:
         """votos POSITIVOS menos votos NEGATIVOS (0 si no hay votos)."""
         from plataforma_qa.publicaciones.tipo_voto import TipoVoto

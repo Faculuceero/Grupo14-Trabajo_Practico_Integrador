@@ -5,14 +5,6 @@ Issue: "Implementar la clase Voto"
 
 Un voto POSITIVO o NEGATIVO que un Usuario da a una Publicacion.
 """
-
-"""Voto
-
-Responsable: Facu Lucero
-Issue: "Implementar la clase Voto"
-
-Un voto POSITIVO o NEGATIVO que un Usuario da a una Publicacion.
-"""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

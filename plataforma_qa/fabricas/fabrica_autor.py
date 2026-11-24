@@ -3,6 +3,7 @@
 Responsable: German Coero Borga
 Issue: "Implementar la clase FabricaAutor"
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

@@ -1,4 +1,5 @@
 """Fixtures compartidas: objetos listos para usar en los tests."""
+
 from datetime import datetime
 
 import pytest
@@ -26,27 +27,37 @@ def categoria():
 
 @pytest.fixture
 def usuario():
-    return Usuario(1, "Ana", "ana@mail.com", hash_password("secreta"),
-                   Rol(TipoRol.USUARIO_GENERAL))
+    return Usuario(
+        1, "Ana", "ana@mail.com", hash_password("secreta"), Rol(TipoRol.USUARIO_GENERAL)
+    )
 
 
 @pytest.fixture
 def otro_usuario():
-    return Usuario(2, "Beto", "beto@mail.com", hash_password("clave"),
-                   Rol(TipoRol.USUARIO_GENERAL))
+    return Usuario(
+        2, "Beto", "beto@mail.com", hash_password("clave"), Rol(TipoRol.USUARIO_GENERAL)
+    )
 
 
 @pytest.fixture
 def pregunta(usuario, categoria, texto):
     """Pregunta reciente, sin etiquetas y sin respuestas."""
-    return Pregunta("¿Cómo se usa una lista?", texto, datetime.now(), usuario, categoria)
+    return Pregunta(
+        "¿Cómo se usa una lista?", texto, datetime.now(), usuario, categoria
+    )
 
 
 @pytest.fixture
 def pregunta_ia(usuario, categoria, texto):
     """Pregunta reciente marcada con la etiqueta ia-help."""
-    return Pregunta("¿Cómo se usa un diccionario?", texto, datetime.now(), usuario,
-                    categoria, [Etiqueta("ia-help")])
+    return Pregunta(
+        "¿Cómo se usa un diccionario?",
+        texto,
+        datetime.now(),
+        usuario,
+        categoria,
+        [Etiqueta("ia-help")],
+    )
 
 
 @pytest.fixture

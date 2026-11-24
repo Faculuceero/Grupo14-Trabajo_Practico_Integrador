@@ -1,4 +1,5 @@
 """Pruebas de Etiqueta (responsable: German Coero Borga)."""
+
 import pytest
 
 from plataforma_qa.publicaciones.etiqueta import Etiqueta

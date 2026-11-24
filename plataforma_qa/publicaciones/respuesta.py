@@ -5,6 +5,7 @@ Issue: "Implementar la clase Respuesta"
 
 Su autor puede ser un Usuario o un AgenteIA: esta clase solo conoce a Autor.
 """
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -18,11 +19,12 @@ if TYPE_CHECKING:
 
 
 class Respuesta(Publicacion):
-    def __init__(self, cuerpo: TextoEnriquecido, fecha_publicacion: datetime,
-                 autor: Autor) -> None:
+    def __init__(
+        self, cuerpo: TextoEnriquecido, fecha_publicacion: datetime, autor: Autor
+    ) -> None:
         super().__init__(cuerpo, fecha_publicacion)
-        self._autor = autor              # relación: autor (Autor)
-        self._es_aceptada = False        # -esAceptada: bool
+        self._autor = autor  # relación: autor (Autor)
+        self._es_aceptada = False  # -esAceptada: bool
 
     @property
     def autor(self) -> Autor:

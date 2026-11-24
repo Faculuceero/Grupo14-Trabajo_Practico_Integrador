@@ -1,4 +1,5 @@
 """Pruebas de Rol (responsable: Nico Migliorini)."""
+
 from plataforma_qa.autores.rol import Rol
 from plataforma_qa.autores.tipo_rol import TipoRol
 

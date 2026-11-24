@@ -1,4 +1,5 @@
 """Pruebas de Respuesta (responsable: Facu Lucero)."""
+
 from datetime import datetime
 
 from plataforma_qa.publicaciones.respuesta import Respuesta

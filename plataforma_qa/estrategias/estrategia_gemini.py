@@ -6,6 +6,7 @@ Issue: "Implementar la clase EstrategiaGemini"
 Proveedor: Gemini. La clave de API (si hace falta) se lee de una variable
 de entorno y NUNCA se sube al repositorio.
 """
+
 import json
 import os
 import urllib.error
@@ -33,9 +34,11 @@ class EstrategiaGemini(EstrategiaLLM):
                 "Falta la variable de entorno GEMINI_API_KEY (o GOOGLE_API_KEY)."
             )
 
-        cuerpo = json.dumps({
-            "contents": [{"parts": [{"text": prompt}]}],
-        }).encode("utf-8")
+        cuerpo = json.dumps(
+            {
+                "contents": [{"parts": [{"text": prompt}]}],
+            }
+        ).encode("utf-8")
         pedido = urllib.request.Request(
             self.URL.format(modelo=self._modelo),
             data=cuerpo,

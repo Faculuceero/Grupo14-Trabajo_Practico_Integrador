@@ -3,6 +3,7 @@
 Responsable: Facu Lucero
 Issue: "Implementar la clase Pregunta"
 """
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -20,10 +21,16 @@ if TYPE_CHECKING:
 
 
 class Pregunta(Publicacion):
-    def __init__(self, titulo: str, cuerpo: TextoEnriquecido, fecha_publicacion: datetime,
-                 autor: Usuario, categoria: Categoria,
-                 etiquetas: list[Etiqueta] | None = None) -> None:
-        
+    def __init__(
+        self,
+        titulo: str,
+        cuerpo: TextoEnriquecido,
+        fecha_publicacion: datetime,
+        autor: Usuario,
+        categoria: Categoria,
+        etiquetas: list[Etiqueta] | None = None,
+    ) -> None:
+
         if not titulo or not titulo.strip():
             raise ValueError("El título de la pregunta no puede estar vacío.")
         if cuerpo is None:
@@ -34,11 +41,11 @@ class Pregunta(Publicacion):
             raise ValueError("El autor es obligatorio.")
 
         super().__init__(cuerpo, fecha_publicacion)
-        self._titulo = titulo                    # -titulo: String
-        self._autor = autor                      # relación: autor (Usuario)
-        self._categoria = categoria              # relación: exactamente 1 Categoria
-        self._etiquetas = etiquetas or []        # relación: 0..* Etiqueta
-        self._respuestas: list[Respuesta] = []   # relación: contiene 0..* Respuesta
+        self._titulo = titulo  # -titulo: String
+        self._autor = autor  # relación: autor (Usuario)
+        self._categoria = categoria  # relación: exactamente 1 Categoria
+        self._etiquetas = etiquetas or []  # relación: 0..* Etiqueta
+        self._respuestas: list[Respuesta] = []  # relación: contiene 0..* Respuesta
 
     @property
     def titulo(self) -> str:
@@ -63,7 +70,9 @@ class Pregunta(Publicacion):
     def aceptar_respuesta(self, r: Respuesta, solicitante: Usuario) -> None:
         """Solo el autor de la pregunta puede marcar una respuesta como aceptada."""
         if solicitante != self._autor:
-            raise PermissionError("Solo el autor de la pregunta puede aceptar una respuesta.")
+            raise PermissionError(
+                "Solo el autor de la pregunta puede aceptar una respuesta."
+            )
         if r not in self._respuestas:
             raise ValueError("La respuesta no pertenece a esta pregunta.")
 

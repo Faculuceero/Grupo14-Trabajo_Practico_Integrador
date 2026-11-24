@@ -1,4 +1,5 @@
 """Pruebas de Autor (responsable: German Coero Borga)."""
+
 import pytest
 
 from plataforma_qa.autores.agente_ia import AgenteIA

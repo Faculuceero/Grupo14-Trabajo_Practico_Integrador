@@ -5,6 +5,7 @@ Issue: "Implementar la clase Publicacion"
 
 Clase base de Pregunta y Respuesta. Guarda el cuerpo, la fecha y los votos.
 """
+
 from __future__ import annotations
 
 from abc import ABC
@@ -19,11 +20,13 @@ if TYPE_CHECKING:
 class Publicacion(ABC):
     def __init__(self, cuerpo: TextoEnriquecido, fecha_publicacion: datetime) -> None:
         if type(self) is Publicacion:
-            raise TypeError("No se puede instanciar directamente la clase abstracta Publicacion.")
-        
-        self._cuerpo = cuerpo                          # #cuerpo: TextoEnriquecido
-        self._fecha_publicacion = fecha_publicacion    # #fechaPublicacion: Date
-        self._votos: list[Voto] = []                   # relación: 1 Publicacion - 0..* Voto
+            raise TypeError(
+                "No se puede instanciar directamente la clase abstracta Publicacion."
+            )
+
+        self._cuerpo = cuerpo  # #cuerpo: TextoEnriquecido
+        self._fecha_publicacion = fecha_publicacion  # #fechaPublicacion: Date
+        self._votos: list[Voto] = []  # relación: 1 Publicacion - 0..* Voto
 
     @property
     def cuerpo(self) -> TextoEnriquecido:

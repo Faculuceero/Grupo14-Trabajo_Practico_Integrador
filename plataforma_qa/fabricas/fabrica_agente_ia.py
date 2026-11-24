@@ -14,12 +14,14 @@ class FabricaAgenteIA(FabricaAutor):
     def crear_autor(self, datos: dict) -> AgenteIA:
         """Crea y devuelve un AgenteIA válido a partir del diccionario `datos`."""
         if not isinstance(datos, dict):
-            raise ValueError("Los datos del agente IA deben enviarse en un diccionario.")
+            raise TypeError("Los datos del agente IA deben enviarse en un diccionario.")
 
         if "id" not in datos or datos["id"] is None:
             raise ValueError("Falta el dato obligatorio: 'id'.")
 
-        nombre = datos.get("nombre") if "nombre" in datos else datos.get("nombre_visible")
+        nombre = (
+            datos.get("nombre") if "nombre" in datos else datos.get("nombre_visible")
+        )
         if not nombre or not str(nombre).strip():
             raise ValueError("Falta el dato obligatorio: 'nombre'.")
 
@@ -35,7 +37,9 @@ class FabricaAgenteIA(FabricaAutor):
         if minutos is None:
             raise ValueError("Falta el dato obligatorio: 'minutos_sin_respuesta'.")
         if not isinstance(minutos, int) or isinstance(minutos, bool) or minutos < 0:
-            raise ValueError("El campo 'minutos_sin_respuesta' debe ser un entero mayor o igual a cero.")
+            raise ValueError(
+                "El campo 'minutos_sin_respuesta' debe ser un entero mayor o igual a cero."
+            )
 
         if "estrategia" not in datos or datos["estrategia"] is None:
             raise ValueError("Falta el dato obligatorio: 'estrategia'.")

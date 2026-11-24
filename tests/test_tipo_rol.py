@@ -1,4 +1,5 @@
 """Pruebas de TipoRol (responsable: Nico Migliorini)."""
+
 from plataforma_qa.autores.tipo_rol import TipoRol
 
 

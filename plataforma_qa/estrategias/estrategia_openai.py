@@ -6,6 +6,7 @@ Issue: "Implementar la clase EstrategiaOpenAI"
 Proveedor: OpenAI. La clave de API (si hace falta) se lee de una variable
 de entorno y NUNCA se sube al repositorio.
 """
+
 import json
 import os
 import urllib.error
@@ -31,10 +32,12 @@ class EstrategiaOpenAI(EstrategiaLLM):
         if not api_key:
             raise RuntimeError("Falta la variable de entorno OPENAI_API_KEY.")
 
-        cuerpo = json.dumps({
-            "model": self._modelo,
-            "messages": [{"role": "user", "content": prompt}],
-        }).encode("utf-8")
+        cuerpo = json.dumps(
+            {
+                "model": self._modelo,
+                "messages": [{"role": "user", "content": prompt}],
+            }
+        ).encode("utf-8")
         pedido = urllib.request.Request(
             self.URL,
             data=cuerpo,

@@ -1,4 +1,5 @@
 """Ayudas compartidas por los tests (no son pruebas)."""
+
 import hashlib
 from datetime import datetime, timedelta
 
@@ -15,8 +16,13 @@ def hash_password(password: str) -> str:
 
 def crear_usuario(n: int = 1) -> Usuario:
     """Usuario distinto para cada número n (id, nombre y email únicos)."""
-    return Usuario(n, f"usuario{n}", f"usuario{n}@mail.com", hash_password("clave"),
-                   Rol(TipoRol.USUARIO_GENERAL))
+    return Usuario(
+        n,
+        f"usuario{n}",
+        f"usuario{n}@mail.com",
+        hash_password("clave"),
+        Rol(TipoRol.USUARIO_GENERAL),
+    )
 
 
 def hace_minutos(minutos: int) -> datetime:
@@ -51,7 +57,12 @@ def datos_usuario(**cambios) -> dict:
 
 def datos_agente(**cambios) -> dict:
     """Datos válidos para FabricaAgenteIA.crear_autor (se pueden pisar con cambios)."""
-    datos = {"id": 99, "nombre": "Asistente IA", "etiqueta": "ia-help",
-             "minutos_sin_respuesta": 30, "estrategia": EstrategiaFalsa()}
+    datos = {
+        "id": 99,
+        "nombre": "Asistente IA",
+        "etiqueta": "ia-help",
+        "minutos_sin_respuesta": 30,
+        "estrategia": EstrategiaFalsa(),
+    }
     datos.update(cambios)
     return datos

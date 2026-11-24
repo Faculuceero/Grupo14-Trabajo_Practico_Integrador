@@ -1,4 +1,5 @@
 """Pruebas de TextoEnriquecido (responsable: German Coero Borga)."""
+
 from plataforma_qa.publicaciones.texto_enriquecido import TextoEnriquecido
 
 

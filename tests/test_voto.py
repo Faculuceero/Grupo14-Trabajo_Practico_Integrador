@@ -1,4 +1,5 @@
 """Pruebas de Voto (responsable: Facu Lucero)."""
+
 from plataforma_qa.publicaciones.tipo_voto import TipoVoto
 from plataforma_qa.publicaciones.voto import Voto
 

@@ -1,4 +1,5 @@
 """Pruebas de EstrategiaLLM, interfaz del patrón Strategy (responsable: Andres Coero Borga)."""
+
 import pytest
 
 from plataforma_qa.estrategias.estrategia_gemini import EstrategiaGemini

@@ -1,4 +1,5 @@
 """Pruebas de FabricaAgenteIA (responsable: Nico Migliorini)."""
+
 import pytest
 
 from plataforma_qa.autores.agente_ia import AgenteIA

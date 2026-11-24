@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.ruff_cache/
 *.egg-info/
 
 # Entornos virtuales
@@ -9,9 +10,15 @@ venv/
 .venv/
 env/
 
-# Claves y configuración local (NUNCA subir claves de API)
+# Claves y configuración local (NUNCA subir claves reales)
 .env
 *.env
+!.env.example
+
+# Bases de datos locales SQLite
+*.db
+*.sqlite
+*.sqlite3
 
 # Editores / sistema
 .idea/

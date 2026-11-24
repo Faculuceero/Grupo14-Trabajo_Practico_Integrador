@@ -6,6 +6,7 @@ Issue: "Implementar la clase EstrategiaModeloLocal"
 Proveedor: un modelo local. La clave de API (si hace falta) se lee de una variable
 de entorno y NUNCA se sube al repositorio.
 """
+
 import json
 import urllib.error
 import urllib.request
@@ -30,11 +31,13 @@ class EstrategiaModeloLocal(EstrategiaLLM):
         if not prompt.strip():
             raise ValueError("El prompt no puede estar vacío.")
 
-        cuerpo = json.dumps({
-            "model": self._modelo,
-            "prompt": prompt,
-            "stream": False,
-        }).encode("utf-8")
+        cuerpo = json.dumps(
+            {
+                "model": self._modelo,
+                "prompt": prompt,
+                "stream": False,
+            }
+        ).encode("utf-8")
         pedido = urllib.request.Request(
             f"{self._direccion}/api/generate",
             data=cuerpo,

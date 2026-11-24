@@ -5,6 +5,7 @@ Issue: "Implementar la enumeración TipoVoto"
 
 TODO: definir los dos valores del diagrama: POSITIVO y NEGATIVO.
 """
+
 from enum import Enum
 
 

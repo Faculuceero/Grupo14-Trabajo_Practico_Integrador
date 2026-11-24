@@ -29,6 +29,7 @@ if TYPE_CHECKING:
 def _calcular_hash(password: str) -> str:
     try:
         from tests.utils import hash_password
+
         return hash_password(password)
     except ImportError:
         return hashlib.sha256(password.encode("utf-8")).hexdigest()

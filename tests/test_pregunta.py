@@ -1,4 +1,5 @@
 """Pruebas de Pregunta (responsable: Facu Lucero)."""
+
 from datetime import datetime
 
 import pytest

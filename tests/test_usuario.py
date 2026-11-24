@@ -1,4 +1,5 @@
 """Pruebas de Usuario (responsable: Nico Migliorini)."""
+
 import pytest
 
 from plataforma_qa.autores.rol import Rol
@@ -28,7 +29,9 @@ def test_preguntar_crea_una_pregunta_del_usuario(usuario, categoria, texto):
     assert p._categoria is categoria
 
 
-def test_responder_crea_una_respuesta_asociada_a_la_pregunta(pregunta, otro_usuario, texto):
+def test_responder_crea_una_respuesta_asociada_a_la_pregunta(
+    pregunta, otro_usuario, texto
+):
     r = otro_usuario.responder(pregunta, texto)
     assert isinstance(r, Respuesta)
     assert r._autor is otro_usuario

@@ -1,4 +1,5 @@
 """Pruebas de FabricaUsuario (responsable: Nico Migliorini)."""
+
 import pytest
 
 from plataforma_qa.autores.tipo_rol import TipoRol

@@ -1,4 +1,5 @@
 """Pruebas de Categoria (responsable: German Coero Borga)."""
+
 import pytest
 
 from plataforma_qa.publicaciones.categoria import Categoria

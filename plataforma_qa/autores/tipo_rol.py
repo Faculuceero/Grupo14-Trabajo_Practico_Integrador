@@ -5,6 +5,7 @@ Issue: "Implementar la enumeración TipoRol"
 
 TODO: definir los dos valores del diagrama: ADMIN y USUARIO_GENERAL.
 """
+
 from enum import Enum
 
 

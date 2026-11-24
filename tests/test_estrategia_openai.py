@@ -2,6 +2,7 @@
 
 No se hacen llamadas reales a internet. Variables de entorno esperadas: OPENAI_API_KEY.
 """
+
 import pytest
 
 from plataforma_qa.estrategias.estrategia_openai import EstrategiaOpenAI

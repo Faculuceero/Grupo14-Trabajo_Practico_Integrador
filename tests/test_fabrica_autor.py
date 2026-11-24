@@ -1,4 +1,5 @@
 """Pruebas de FabricaAutor y del patrón Factory Method (responsable: German Coero Borga)."""
+
 import pytest
 
 from plataforma_qa.autores.autor import Autor

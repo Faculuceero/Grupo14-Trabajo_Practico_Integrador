@@ -2,6 +2,7 @@
 
 No se hacen llamadas reales a internet. Variables de entorno esperadas: GEMINI_API_KEY, GOOGLE_API_KEY.
 """
+
 import pytest
 
 from plataforma_qa.estrategias.estrategia_gemini import EstrategiaGemini

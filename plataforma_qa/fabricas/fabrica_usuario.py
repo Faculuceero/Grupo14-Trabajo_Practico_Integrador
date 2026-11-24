@@ -8,15 +8,16 @@ from __future__ import annotations
 
 import hashlib
 
-from plataforma_qa.fabricas.fabrica_autor import FabricaAutor
 from plataforma_qa.autores.rol import Rol
 from plataforma_qa.autores.tipo_rol import TipoRol
 from plataforma_qa.autores.usuario import Usuario
+from plataforma_qa.fabricas.fabrica_autor import FabricaAutor
 
 
 def _hashear_password(password: str) -> str:
     try:
         from tests.utils import hash_password
+
         return hash_password(password)
     except ImportError:
         return hashlib.sha256(password.encode("utf-8")).hexdigest()
@@ -29,16 +30,26 @@ class FabricaUsuario(FabricaAutor):
     def crear_autor(self, datos: dict) -> Usuario:
         """Crea y devuelve un Usuario válido a partir del diccionario `datos`."""
         if not isinstance(datos, dict):
-            raise ValueError("Los datos del usuario deben enviarse en un diccionario.")
+            raise TypeError("Los datos del usuario deben enviarse en un diccionario.")
 
-        nombre = datos.get("nombre") if "nombre" in datos else datos.get("nombre_visible")
+        nombre = (
+            datos.get("nombre") if "nombre" in datos else datos.get("nombre_visible")
+        )
         if "id" not in datos or datos["id"] is None:
             raise ValueError("Falta el dato obligatorio: 'id'.")
         if not nombre or not str(nombre).strip():
             raise ValueError("Falta el dato obligatorio: 'nombre'.")
-        if "email" not in datos or not datos["email"] or not str(datos["email"]).strip():
+        if (
+            "email" not in datos
+            or not datos["email"]
+            or not str(datos["email"]).strip()
+        ):
             raise ValueError("Falta el dato obligatorio: 'email'.")
-        if "password" not in datos or not datos["password"] or not str(datos["password"]).strip():
+        if (
+            "password" not in datos
+            or not datos["password"]
+            or not str(datos["password"]).strip()
+        ):
             raise ValueError("Falta el dato obligatorio: 'password'.")
 
         email_normalizado = str(datos["email"]).strip().lower()

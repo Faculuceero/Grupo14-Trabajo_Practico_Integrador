@@ -1,11 +1,10 @@
 """Pruebas de AgenteIA, contexto del patrón Strategy (responsable: Facu Lucero)."""
-from datetime import datetime
 
 import pytest
 
 from plataforma_qa.publicaciones.pregunta import Pregunta
 from plataforma_qa.publicaciones.respuesta import Respuesta
-from tests.utils import EstrategiaFalsa, EstrategiaFallida, hace_minutos
+from tests.utils import EstrategiaFallida, EstrategiaFalsa, hace_minutos
 
 
 def test_set_estrategia_cambia_la_estrategia(agente):
@@ -42,7 +41,9 @@ def test_debe_responder_si_la_pregunta_tiene_la_etiqueta(agente, pregunta_ia):
     assert agente.debe_responder(pregunta_ia) is True
 
 
-def test_debe_responder_si_lleva_mucho_tiempo_sin_respuestas(agente, usuario, categoria, texto):
+def test_debe_responder_si_lleva_mucho_tiempo_sin_respuestas(
+    agente, usuario, categoria, texto
+):
     p = Pregunta("Antigua", texto, hace_minutos(60), usuario, categoria)
     assert agente.debe_responder(p) is True
 

@@ -1,4 +1,5 @@
 """Pruebas de TipoVoto (responsable: Andres Coero Borga)."""
+
 from plataforma_qa.publicaciones.tipo_voto import TipoVoto
 
 

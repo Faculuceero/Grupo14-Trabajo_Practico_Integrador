@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Preguntas - Plataforma Q&A{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Preguntas</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul>
+        {% for category, message in messages %}
+          <li><strong>[{{ category }}]</strong> {{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <p><a href="{{ url_for('preguntas.create_pregunta') }}">+ Nueva pregunta</a></p>
+
+  <h2>Categorías disponibles</h2>
+  <form method="post" action="{{ url_for('preguntas.create_categoria') }}">
+    <input type="text" name="nombre" placeholder="Nueva categoría (ej: Python, Flask)" required>
+    <button type="submit">Agregar categoría</button>
+  </form>
+  {% if categorias %}
+    <ul>
+      {% for cat in categorias %}
+        <li>{{ cat.nombre }} ({{ cat.preguntas|length }})</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay categorías cargadas todavía.</p>
+  {% endif %}
+
+  <hr>
+
+  <h2>Listado de preguntas</h2>
+  {% if preguntas %}
+    <ul>
+      {% for pregunta in preguntas %}
+        <li>
+          <article>
+            <h3>
+              <a href="{{ url_for('preguntas.detail_pregunta', pregunta_id=pregunta.id) }}">
+                {{ pregunta.titulo }}
+              </a>
+            </h3>
+            <p>
+              <strong>Categoría:</strong> {{ pregunta.categoria.nombre }} |
+              <strong>Autor:</strong> {{ pregunta.autor.name }} |
+              <strong>Fecha:</strong> {{ pregunta.fecha_publicacion.strftime('%Y-%m-%d %H:%M') }}
+            </p>
+            {% if pregunta.etiquetas %}
+              <p>
+                <strong>Etiquetas:</strong>
+                {% for et in pregunta.etiquetas %}
+                  <span>#{{ et.nombre }}</span>
+                {% endfor %}
+              </p>
+            {% endif %}
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Todavía no hay preguntas publicadas.</p>
+  {% endif %}
+</section>
+{% endblock %}

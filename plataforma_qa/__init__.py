@@ -12,10 +12,12 @@ def create_app(config_class=Config):
 
     from plataforma_qa.api.health import health_bp
     from plataforma_qa.web.auth import auth_bp
+    from plataforma_qa.web.preguntas import preguntas_bp
     from plataforma_qa.web.users import users_bp
 
     app.register_blueprint(health_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
+    app.register_blueprint(preguntas_bp)
 
     return app

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil de Usuario - Plataforma Q&A{% endblock %}
+
+{% block content %}
+<div class="card">
+    {% if usuario %}
+        <h2>Perfil de {{ usuario.name if usuario.name else usuario.nombre }}</h2>
+        <p><strong>Email:</strong> {{ usuario.email }}</p>
+        <p><strong>Rol:</strong> {{ usuario.rol.nombre if usuario.rol else 'Sin Rol' }}</p>
+    {% else %}
+        <h2>Detalle del Usuario #{{ user_id }}</h2>
+        <p>Información de usuario en desarrollo.</p>
+    {% endif %}
+    <a href="{{ url_for('users.index') }}" class="btn">Volver a Usuarios</a>
+</div>
+{% endblock %}

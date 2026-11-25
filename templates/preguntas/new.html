@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Nueva Pregunta - Plataforma Q&A{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Publicar nueva pregunta</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul>
+        {% for category, message in messages %}
+          <li><strong>[{{ category }}]</strong> {{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" action="{{ url_for('preguntas.create_pregunta') }}">
+    <div>
+      <label for="titulo">Título</label><br>
+      <input type="text" id="titulo" name="titulo" required maxlength="200">
+    </div>
+
+    <div>
+      <label for="cuerpo">Cuerpo de la pregunta</label><br>
+      <textarea id="cuerpo" name="cuerpo" rows="6" required></textarea>
+    </div>
+
+    <div>
+      <label for="categoria_id">Categoría existente</label><br>
+      <select id="categoria_id" name="categoria_id">
+        <option value="">-- Seleccionar categoría --</option>
+        {% for cat in categorias %}
+          <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label for="nueva_categoria">O crear nueva categoría</label><br>
+      <input type="text" id="nueva_categoria" name="nueva_categoria" placeholder="Ej: Bases de Datos">
+    </div>
+
+    {% if etiquetas %}
+      <fieldset>
+        <legend>Etiquetas existentes</legend>
+        {% for et in etiquetas %}
+          <label>
+            <input type="checkbox" name="etiquetas" value="{{ et.id }}">
+            #{{ et.nombre }}
+          </label>
+        {% endfor %}
+      </fieldset>
+    {% endif %}
+
+    <div>
+      <label for="nuevas_etiquetas">Nuevas etiquetas (separadas por coma)</label><br>
+      <input type="text" id="nuevas_etiquetas" name="nuevas_etiquetas" placeholder="python, flask, sqlalchemy">
+    </div>
+
+    <button type="submit">Publicar pregunta</button>
+    <a href="{{ url_for('preguntas.list_preguntas') }}">Cancelar</a>
+  </form>
+</section>
+{% endblock %}

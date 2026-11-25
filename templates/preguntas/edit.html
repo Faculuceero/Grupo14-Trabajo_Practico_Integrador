@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Pregunta - Plataforma Q&A{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Editar pregunta</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul>
+        {% for category, message in messages %}
+          <li><strong>[{{ category }}]</strong> {{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" action="{{ url_for('preguntas.edit_pregunta', pregunta_id=pregunta.id) }}">
+    <div>
+      <label for="titulo">Título</label><br>
+      <input type="text" id="titulo" name="titulo" value="{{ pregunta.titulo }}" required maxlength="200">
+    </div>
+
+    <div>
+      <label for="cuerpo">Cuerpo de la pregunta</label><br>
+      <textarea id="cuerpo" name="cuerpo" rows="6" required>{{ pregunta.cuerpo }}</textarea>
+    </div>
+
+    <div>
+      <label for="categoria_id">Categoría</label><br>
+      <select id="categoria_id" name="categoria_id" required>
+        {% for cat in categorias %}
+          <option value="{{ cat.id }}" {% if cat.id == pregunta.categoria_id %}selected{% endif %}>
+            {{ cat.nombre }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {% if etiquetas %}
+      <fieldset>
+        <legend>Etiquetas</legend>
+        {% for et in etiquetas %}
+          <label>
+            <input type="checkbox" name="etiquetas" value="{{ et.id }}" {% if et in pregunta.etiquetas %}checked{% endif %}>
+            #{{ et.nombre }}
+          </label>
+        {% endfor %}
+      </fieldset>
+    {% endif %}
+
+    <div>
+      <label for="nuevas_etiquetas">Agregar nuevas etiquetas (separadas por coma)</label><br>
+      <input type="text" id="nuevas_etiquetas" name="nuevas_etiquetas" placeholder="ej: bug, ayuda">
+    </div>
+
+    <button type="submit">Guardar cambios</button>
+    <a href="{{ url_for('preguntas.detail_pregunta', pregunta_id=pregunta.id) }}">Cancelar</a>
+  </form>
+</section>
+{% endblock %}

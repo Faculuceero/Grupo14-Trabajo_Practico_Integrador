@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pregunta.titulo }} - Plataforma Q&A{% endblock %}
+
+{% block content %}
+<article>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul>
+        {% for category, message in messages %}
+          <li><strong>[{{ category }}]</strong> {{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <h1>{{ pregunta.titulo }}</h1>
+
+  <p>
+    <strong>Categoría:</strong> {{ pregunta.categoria.nombre }} |
+    <strong>Autor:</strong> {{ pregunta.autor.name }} |
+    <strong>Publicada:</strong> {{ pregunta.fecha_publicacion.strftime('%Y-%m-%d %H:%M') }}
+  </p>
+
+  {% if pregunta.etiquetas %}
+    <p>
+      <strong>Etiquetas:</strong>
+      {% for et in pregunta.etiquetas %}
+        <span>#{{ et.nombre }}</span>
+      {% endfor %}
+    </p>
+  {% endif %}
+
+  <hr>
+
+  <div>
+    <p>{{ pregunta.cuerpo }}</p>
+  </div>
+
+  <hr>
+
+  <div>
+    <a href="{{ url_for('preguntas.edit_pregunta', pregunta_id=pregunta.id) }}">Editar pregunta</a>
+    <form method="post" action="{{ url_for('preguntas.delete_pregunta', pregunta_id=pregunta.id) }}" style="display:inline;">
+      <button type="submit" onclick="return confirm('¿Eliminar esta pregunta?');">Eliminar pregunta</button>
+    </form>
+    <a href="{{ url_for('preguntas.list_preguntas') }}">Volver al listado</a>
+  </div>
+</article>
+{% endblock %}

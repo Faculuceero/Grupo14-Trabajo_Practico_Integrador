@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión - Plataforma Q&A{% endblock %}
+
+{% block content %}
+<h1>Iniciar sesión</h1>
+<form method="POST" action="{{ url_for('auth.login') }}">
+    <div>
+        <label>Correo electrónico:</label>
+        <input type="email" name="email" required>
+    </div>
+    <div>
+        <label>Contraseña:</label>
+        <input type="password" name="password" required>
+    </div>
+    <button type="submit">Entrar</button>
+</form>
+<p>¿No tenés cuenta? <a href="{{ url_for('auth.register') }}">Registrate acá</a></p>
+{% endblock %}

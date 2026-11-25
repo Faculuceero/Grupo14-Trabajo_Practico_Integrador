@@ -1,4 +1,13 @@
-from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+from flask import (
+    Blueprint,
+    flash,
+    g,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 
 from plataforma_qa.extensions import db
 from plataforma_qa.models.user import User

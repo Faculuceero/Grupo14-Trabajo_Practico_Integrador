@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Registro - Plataforma Q&A{% endblock %}
+
+{% block content %}
+<h1>Crear cuenta</h1>
+<form method="POST" action="{{ url_for('auth.register') }}">
+    <div>
+        <label>Nombre:</label>
+        <input type="text" name="name" required>
+    </div>
+    <div>
+        <label>Correo electrónico:</label>
+        <input type="email" name="email" required>
+    </div>
+    <div>
+        <label>Contraseña:</label>
+        <input type="password" name="password" required>
+    </div>
+    <div>
+        <label>Rol:</label>
+        <select name="rol">
+            <option value="usuario">Usuario general</option>
+            <option value="admin">Admin</option>
+        </select>
+    </div>
+    <button type="submit">Registrarse</button>
+</form>
+<p>¿Ya tenés cuenta? <a href="{{ url_for('auth.login') }}">Iniciá sesión</a></p>
+{% endblock %}

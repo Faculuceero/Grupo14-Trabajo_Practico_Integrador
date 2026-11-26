@@ -46,5 +46,46 @@
     </form>
     <a href="{{ url_for('preguntas.list_preguntas') }}">Volver al listado</a>
   </div>
+
+  <hr>
+
+  <h2>{{ respuestas|length }} respuesta{{ '' if respuestas|length == 1 else 's' }}</h2>
+
+  {% for r in respuestas %}
+    <section class="respuesta{% if r.es_aceptada %} aceptada{% endif %}">
+      <p class="respuesta-meta">
+        <strong>{{ r.nombre_autor }}</strong>
+        {% if r.es_ia %}<span class="badge-ia">IA</span>{% endif %}
+        | {{ r.fecha_publicacion.strftime('%Y-%m-%d %H:%M') }}
+        {% if r.es_aceptada %}<span class="badge-aceptada">✔ Respuesta aceptada</span>{% endif %}
+      </p>
+      <p class="texto-multilinea">{{ r.cuerpo }}</p>
+      <div>
+        {% if puede_aceptar(pregunta, g.user) and not r.es_aceptada %}
+          <form method="post" action="{{ url_for('preguntas.accept_respuesta', respuesta_id=r.id) }}" style="display:inline;">
+            <button type="submit">Marcar como aceptada</button>
+          </form>
+        {% endif %}
+        {% if puede_modificar(r, g.user) %}
+          <a href="{{ url_for('preguntas.edit_respuesta', respuesta_id=r.id) }}">Editar</a>
+          <form method="post" action="{{ url_for('preguntas.delete_respuesta', respuesta_id=r.id) }}" style="display:inline;">
+            <button type="submit" onclick="return confirm('¿Eliminar esta respuesta?');">Eliminar</button>
+          </form>
+        {% endif %}
+      </div>
+    </section>
+  {% else %}
+    <p>Todavía no hay respuestas.</p>
+  {% endfor %}
+
+  <h3>Tu respuesta</h3>
+  {% if g.user %}
+    <form method="post" action="{{ url_for('preguntas.create_respuesta', pregunta_id=pregunta.id) }}">
+      <textarea name="cuerpo" rows="5" required></textarea>
+      <button type="submit">Responder</button>
+    </form>
+  {% else %}
+    <p><a href="{{ url_for('auth.login') }}">Iniciá sesión</a> para responder.</p>
+  {% endif %}
 </article>
 {% endblock %}

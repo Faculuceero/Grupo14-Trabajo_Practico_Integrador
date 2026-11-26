@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Editar respuesta - Plataforma Q&A{% endblock %}
+
+{% block content %}
+<h1>Editar respuesta</h1>
+<form method="post">
+  <textarea name="cuerpo" rows="6" required>{{ request.form.get('cuerpo', respuesta.cuerpo) }}</textarea>
+  <button type="submit">Guardar</button>
+  <a href="{{ url_for('preguntas.detail_pregunta', pregunta_id=respuesta.pregunta_id) }}">Cancelar</a>
+</form>
+{% endblock %}

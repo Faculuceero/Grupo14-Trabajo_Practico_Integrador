@@ -1,5 +1,6 @@
 from flask import (
     Blueprint,
+    abort,
     flash,
     g,
     redirect,
@@ -9,7 +10,9 @@ from flask import (
 )
 
 from plataforma_qa.extensions import db
-from plataforma_qa.models import Categoria, Etiqueta, Pregunta, User
+from plataforma_qa.models import Categoria, Etiqueta, Pregunta, Respuesta, User
+from plataforma_qa.services import respuestas as respuestas_service
+from plataforma_qa.web.acceso import login_required
 
 preguntas_bp = Blueprint("preguntas", __name__, url_prefix="/preguntas")
 
@@ -139,7 +142,18 @@ def create_pregunta():
 @preguntas_bp.get("/<int:pregunta_id>")
 def detail_pregunta(pregunta_id: int):
     pregunta = db.get_or_404(Pregunta, pregunta_id)
-    return render_template("preguntas/detail.html", pregunta=pregunta)
+    # La aceptada primero; después, de la más vieja a la más nueva.
+    respuestas = sorted(
+        pregunta.respuestas,
+        key=lambda r: (not r.es_aceptada, r.fecha_publicacion),
+    )
+    return render_template(
+        "preguntas/detail.html",
+        pregunta=pregunta,
+        respuestas=respuestas,
+        puede_aceptar=respuestas_service.puede_aceptar,
+        puede_modificar=respuestas_service.puede_modificar,
+    )
 
 
 @preguntas_bp.route("/<int:pregunta_id>/edit", methods=["GET", "POST"])
@@ -198,3 +212,71 @@ def delete_pregunta(pregunta_id: int):
     db.session.commit()
     flash("Pregunta eliminada.", "success")
     return redirect(url_for("preguntas.list_preguntas"))
+
+# --- Respuestas ---------------------------------------------------------------
+
+
+@preguntas_bp.post("/<int:pregunta_id>/respuestas")
+@login_required
+def create_respuesta(pregunta_id: int):
+    pregunta = db.get_or_404(Pregunta, pregunta_id)
+    try:
+        respuestas_service.crear_respuesta(
+            pregunta, g.user, request.form.get("cuerpo")
+        )
+        flash("Respuesta publicada.", "success")
+    except ValueError as error:
+        flash(str(error), "error")
+    return redirect(url_for("preguntas.detail_pregunta", pregunta_id=pregunta.id))
+
+
+@preguntas_bp.route("/respuestas/<int:respuesta_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_respuesta(respuesta_id: int):
+    respuesta = db.get_or_404(Respuesta, respuesta_id)
+    if not respuestas_service.puede_modificar(respuesta, g.user):
+        abort(403)
+
+    if request.method == "POST":
+        try:
+            respuestas_service.modificar_respuesta(
+                respuesta, g.user, request.form.get("cuerpo")
+            )
+        except ValueError as error:
+            flash(str(error), "error")
+            return render_template(
+                "preguntas/edit_respuesta.html", respuesta=respuesta
+            ), 400
+        flash("Respuesta actualizada.", "success")
+        return redirect(
+            url_for("preguntas.detail_pregunta", pregunta_id=respuesta.pregunta_id)
+        )
+
+    return render_template("preguntas/edit_respuesta.html", respuesta=respuesta)
+
+
+@preguntas_bp.post("/respuestas/<int:respuesta_id>/delete")
+@login_required
+def delete_respuesta(respuesta_id: int):
+    respuesta = db.get_or_404(Respuesta, respuesta_id)
+    pregunta_id = respuesta.pregunta_id
+    try:
+        respuestas_service.borrar_respuesta(respuesta, g.user)
+    except PermissionError:
+        abort(403)
+    flash("Respuesta eliminada.", "success")
+    return redirect(url_for("preguntas.detail_pregunta", pregunta_id=pregunta_id))
+
+
+@preguntas_bp.post("/respuestas/<int:respuesta_id>/aceptar")
+@login_required
+def accept_respuesta(respuesta_id: int):
+    respuesta = db.get_or_404(Respuesta, respuesta_id)
+    try:
+        respuestas_service.aceptar_respuesta(respuesta, g.user)
+    except PermissionError:
+        abort(403)
+    flash("Respuesta marcada como aceptada.", "success")
+    return redirect(
+        url_for("preguntas.detail_pregunta", pregunta_id=respuesta.pregunta_id)
+    )

@@ -75,3 +75,12 @@ body {
     margin-bottom: 0.5rem;
     background-color: #e2e8f0;
 }
+
+
+/* Respuestas */
+.respuesta { border: 1px solid #d6dbe0; border-radius: 6px; padding: 10px 14px; margin: 12px 0; }
+.respuesta.aceptada { border-color: #2e7d32; background: #f1f8f1; }
+.respuesta-meta { color: #59636e; margin: 0 0 6px; }
+.texto-multilinea { white-space: pre-wrap; }
+.badge-ia { background: #1a56b8; color: #fff; border-radius: 4px; padding: 0 6px; font-size: .8em; }
+.badge-aceptada { color: #2e7d32; font-weight: bold; margin-left: 8px; }

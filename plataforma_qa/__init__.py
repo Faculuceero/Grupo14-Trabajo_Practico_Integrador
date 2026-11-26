@@ -18,7 +18,7 @@ def create_app(config_class=Config):
     from plataforma_qa.api.respuestas import respuestas_api_bp
     from plataforma_qa.api.users import users_api_bp
     from plataforma_qa.api.votos import votos_api_bp
-    from plataforma_qa.cli import responder_pendientes
+    from plataforma_qa.cli import hacer_admin, responder_pendientes
     from plataforma_qa.web.auth import auth_bp
     from plataforma_qa.web.preguntas import preguntas_bp
     from plataforma_qa.web.users import users_bp
@@ -35,5 +35,6 @@ def create_app(config_class=Config):
     app.register_blueprint(users_api_bp)
     app.register_blueprint(ia_api_bp)
     app.cli.add_command(responder_pendientes)
+    app.cli.add_command(hacer_admin)
 
     return app

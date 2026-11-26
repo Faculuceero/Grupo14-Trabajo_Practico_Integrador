@@ -9,6 +9,7 @@ funciones; así las reglas viven en un solo lugar:
 
 from plataforma_qa.extensions import db
 from plataforma_qa.models import Respuesta
+from plataforma_qa.services.permisos import es_admin
 
 
 def _limpiar(cuerpo) -> str:
@@ -18,12 +19,17 @@ def _limpiar(cuerpo) -> str:
 
 
 def puede_modificar(respuesta, usuario) -> bool:
-    """Solo el autor edita o borra su respuesta (las del agente IA, nadie)."""
+    """Solo el autor edita su respuesta (las del agente IA, nadie)."""
     return (
         usuario is not None
         and not respuesta.es_ia
         and respuesta.user_id == usuario.id
     )
+
+
+def puede_borrar(respuesta, usuario) -> bool:
+    """El autor borra la suya; el admin puede borrar cualquiera (incluso las de la IA)."""
+    return es_admin(usuario) or puede_modificar(respuesta, usuario)
 
 
 def puede_aceptar(pregunta, usuario) -> bool:
@@ -65,8 +71,8 @@ def modificar_respuesta(respuesta, solicitante, cuerpo) -> Respuesta:
 
 
 def borrar_respuesta(respuesta, solicitante) -> None:
-    if not puede_modificar(respuesta, solicitante):
-        raise PermissionError("Solo el autor puede borrar su respuesta.")
+    if not puede_borrar(respuesta, solicitante):
+        raise PermissionError("Solo el autor o un administrador pueden borrar la respuesta.")
     db.session.delete(respuesta)
     db.session.commit()
 

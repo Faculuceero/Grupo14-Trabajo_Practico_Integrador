@@ -24,8 +24,10 @@ def app():
         db.drop_all()
 
 
-def _usuario(nombre):
-    usuario = User(name=nombre, email=f"{nombre.lower()}@example.com", password="x")
+def _usuario(nombre, rol="usuario"):
+    usuario = User(
+        name=nombre, email=f"{nombre.lower()}@example.com", password="x", rol=rol
+    )
     db.session.add(usuario)
     db.session.commit()
     return usuario
@@ -190,8 +192,7 @@ def test_api_votos(app, pregunta):
 
 
 def test_api_categorias(app, pregunta):
-    ana = db.session.get(User, pregunta.user_id)
-    cliente = _cliente(app, ana)
+    cliente = _cliente(app, _usuario("Admin", "admin"))  # gestionar categorías: solo admin
 
     assert _cliente(app).post("/api/categorias", json={"nombre": "Flask"}).status_code == 401
     creada = cliente.post("/api/categorias", json={"nombre": "Flask"})

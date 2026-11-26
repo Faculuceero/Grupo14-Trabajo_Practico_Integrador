@@ -4,6 +4,8 @@ import click
 from flask.cli import with_appcontext
 
 from plataforma_qa.services import agente_ia
+from plataforma_qa.services import usuarios as usuarios_service
+from plataforma_qa.services.errores import NoEncontrado
 
 
 @click.command("responder-pendientes")
@@ -21,3 +23,15 @@ def responder_pendientes(minutos):
     click.echo(f"Preguntas respondidas por el agente IA: {len(respondidas)}")
     for pregunta_id, motivo in fallidas:
         click.echo(f"  - No se pudo responder la pregunta {pregunta_id}: {motivo}")
+
+
+@click.command("hacer-admin")
+@click.argument("email")
+@with_appcontext
+def hacer_admin(email):
+    """Convierte a un usuario ya registrado en administrador."""
+    try:
+        usuario = usuarios_service.hacer_admin(email)
+    except NoEncontrado as error:
+        raise click.ClickException(str(error)) from error
+    click.echo(f"{usuario.name} ({usuario.email}) ahora es administrador.")

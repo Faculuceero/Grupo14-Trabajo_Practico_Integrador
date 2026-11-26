@@ -10,7 +10,8 @@ import hmac
 
 from plataforma_qa.extensions import db
 from plataforma_qa.models import User
-from plataforma_qa.services.errores import Conflicto
+from plataforma_qa.services.errores import Conflicto, NoEncontrado
+from plataforma_qa.services.permisos import ROL_ADMIN, ROL_USUARIO
 from plataforma_qa.services.validacion import texto_obligatorio
 
 MIN_PASSWORD = 8
@@ -35,7 +36,7 @@ def crear_usuario(name, email, password) -> User:
         raise Conflicto("Ya existe un usuario registrado con ese correo.")
 
     # El rol siempre es "usuario": un registro público no puede pedir ser admin.
-    usuario = User(name=name, email=email, password=password, rol="usuario")
+    usuario = User(name=name, email=email, password=password, rol=ROL_USUARIO)
     db.session.add(usuario)
     db.session.commit()
     return usuario
@@ -57,5 +58,15 @@ def modificar_nombre(usuario, solicitante, name) -> User:
     if solicitante is None or solicitante.id != usuario.id:
         raise PermissionError("Solo podés modificar tu propio usuario.")
     usuario.name = texto_obligatorio(name, "name", 120)
+    db.session.commit()
+    return usuario
+
+
+def hacer_admin(email) -> User:
+    """Convierte a un usuario existente en administrador (lo usa el comando hacer-admin)."""
+    usuario = _por_email(str(email).strip().lower())
+    if usuario is None:
+        raise NoEncontrado(f"No existe un usuario con el correo {email}.")
+    usuario.rol = ROL_ADMIN
     db.session.commit()
     return usuario

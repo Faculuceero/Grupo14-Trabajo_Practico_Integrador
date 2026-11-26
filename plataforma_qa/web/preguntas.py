@@ -12,6 +12,8 @@ from flask import (
 from plataforma_qa.extensions import db
 from plataforma_qa.models import Categoria, Etiqueta, Pregunta, Respuesta, User
 from plataforma_qa.services import agente_ia as agente_service
+from plataforma_qa.services import permisos
+from plataforma_qa.services import preguntas as preguntas_service
 from plataforma_qa.services import respuestas as respuestas_service
 from plataforma_qa.services import votos as votos_service
 from plataforma_qa.services.errores import Conflicto
@@ -75,7 +77,10 @@ def list_preguntas():
 
 
 @preguntas_bp.post("/categorias")
+@login_required
 def create_categoria():
+    if not permisos.es_admin(g.user):
+        abort(403)
     nombre = request.form.get("nombre", "").strip()
     if not nombre:
         flash("El nombre de la categoría no puede estar vacío.", "error")
@@ -93,6 +98,7 @@ def create_categoria():
 
 
 @preguntas_bp.route("/nueva", methods=["GET", "POST"])
+@login_required
 def create_pregunta():
     categorias = Categoria.query.order_by(Categoria.nombre.asc()).all()
     etiquetas = Etiqueta.query.order_by(Etiqueta.nombre.asc()).all()
@@ -112,6 +118,14 @@ def create_pregunta():
 
         if not titulo or not cuerpo:
             flash("El título y el cuerpo de la pregunta son obligatorios.", "error")
+            return render_template(
+                "preguntas/new.html",
+                categorias=categorias,
+                etiquetas=etiquetas,
+            )
+
+        if nueva_categoria and not permisos.es_admin(g.user):
+            flash("Solo un administrador puede crear categorías nuevas.", "error")
             return render_template(
                 "preguntas/new.html",
                 categorias=categorias,
@@ -171,13 +185,19 @@ def detail_pregunta(pregunta_id: int):
         respuestas=respuestas,
         puede_aceptar=respuestas_service.puede_aceptar,
         puede_modificar=respuestas_service.puede_modificar,
+        puede_borrar=respuestas_service.puede_borrar,
+        puede_editar_pregunta=preguntas_service.puede_modificar,
+        puede_borrar_pregunta=preguntas_service.puede_borrar,
         puntuacion=votos_service.puntuacion,
     )
 
 
 @preguntas_bp.route("/<int:pregunta_id>/edit", methods=["GET", "POST"])
+@login_required
 def edit_pregunta(pregunta_id: int):
     pregunta = db.get_or_404(Pregunta, pregunta_id)
+    if not preguntas_service.puede_modificar(pregunta, g.user):
+        abort(403)
     categorias = Categoria.query.order_by(Categoria.nombre.asc()).all()
     etiquetas = Etiqueta.query.order_by(Etiqueta.nombre.asc()).all()
 
@@ -226,10 +246,13 @@ def edit_pregunta(pregunta_id: int):
 
 
 @preguntas_bp.post("/<int:pregunta_id>/delete")
+@login_required
 def delete_pregunta(pregunta_id: int):
     pregunta = db.get_or_404(Pregunta, pregunta_id)
-    db.session.delete(pregunta)
-    db.session.commit()
+    try:
+        preguntas_service.borrar_pregunta(pregunta, g.user)
+    except PermissionError:
+        abort(403)
     flash("Pregunta eliminada.", "success")
     return redirect(url_for("preguntas.list_preguntas"))
 

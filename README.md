@@ -70,3 +70,18 @@ Se configura con variables de entorno (las claves **nunca** se suben al reposito
 | GET | `/api/auth/me` | Usuario de la sesión | Sí |
 | GET | `/api/users` · `/api/users/<id>` | Lista / detalle (datos públicos) | No |
 | PATCH | `/api/users/<id>` | Cambiar el propio nombre | Sí |
+
+## Roles y permisos
+
+| Acción | Usuario | Admin |
+|---|---|---|
+| Crear preguntas y respuestas | Sí | Sí |
+| Editar pregunta o respuesta | Solo las suyas | Solo las suyas |
+| Borrar pregunta o respuesta | Solo las suyas | Cualquiera |
+| Aceptar una respuesta | Solo en sus preguntas | Solo en sus preguntas |
+| Crear, renombrar y borrar categorías | No | Sí |
+
+Se aplica igual en la web y en la API (sin permiso responde 403; sin sesión, 401).
+Quien se registra siempre es "usuario". Para convertir a alguien en administrador:
+
+    uv run flask --app plataforma_qa hacer-admin correo@ejemplo.com

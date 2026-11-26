@@ -4,7 +4,7 @@
     GET    /api/preguntas/<id>   detalle                                       público
     POST   /api/preguntas        crear                       requiere sesión
     PATCH  /api/preguntas/<id>   modificar (solo el autor)   requiere sesión
-    DELETE /api/preguntas/<id>   borrar (solo el autor)      requiere sesión
+    DELETE /api/preguntas/<id>   borrar (el autor o un admin)   requiere sesión
 """
 
 from flask import Blueprint, current_app, g, jsonify, request, url_for

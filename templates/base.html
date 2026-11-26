@@ -16,7 +16,9 @@
         <div class="nav-user">
             {% if g.user %}
                 <span>Hola, <strong>{{ g.user.nombre }}</strong></span>
-                <a href="{{ url_for('auth.logout') }}" class="btn">Cerrar Sesión</a>
+                <form method="post" action="{{ url_for('auth.logout') }}" style="display:inline;">
+                    <button type="submit">Cerrar sesión</button>
+                </form>
             {% else %}
                 <a href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
                 <a href="{{ url_for('auth.register') }}" class="btn">Registrarse</a>

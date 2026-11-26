@@ -11,8 +11,10 @@ from flask import (
 
 from plataforma_qa.extensions import db
 from plataforma_qa.models import Categoria, Etiqueta, Pregunta, Respuesta, User
+from plataforma_qa.services import agente_ia as agente_service
 from plataforma_qa.services import respuestas as respuestas_service
 from plataforma_qa.services import votos as votos_service
+from plataforma_qa.services.errores import Conflicto
 from plataforma_qa.web.acceso import login_required
 
 preguntas_bp = Blueprint("preguntas", __name__, url_prefix="/preguntas")
@@ -45,6 +47,20 @@ def _procesar_etiquetas(etiquetas_ids: list[str], nuevas_etiquetas: str) -> list
             seleccionadas.append(etiqueta)
 
     return seleccionadas
+
+def _responder_automaticamente(pregunta) -> None:
+    """Si la pregunta tiene #ia-help, responde el agente IA.
+
+    Si el proveedor falla, la pregunta igual queda guardada y se avisa al usuario.
+    """
+    try:
+        if agente_service.responder_automaticamente(pregunta) is not None:
+            flash("El agente IA respondió tu pregunta.", "success")
+    except agente_service.AgenteIAError as error:
+        flash(
+            f"La pregunta se guardó, pero el agente IA no pudo responder: {error}",
+            "error",
+        )
 
 
 @preguntas_bp.get("/")
@@ -130,6 +146,7 @@ def create_pregunta():
 
         db.session.add(pregunta)
         db.session.commit()
+        _responder_automaticamente(pregunta)
         flash("Pregunta publicada correctamente.", "success")
         return redirect(url_for("preguntas.detail_pregunta", pregunta_id=pregunta.id))
 
@@ -196,6 +213,7 @@ def edit_pregunta(pregunta_id: int):
         pregunta.etiquetas = _procesar_etiquetas(etiquetas_ids, nuevas_etiquetas)
 
         db.session.commit()
+        _responder_automaticamente(pregunta)
         flash("Pregunta actualizada correctamente.", "success")
         return redirect(url_for("preguntas.detail_pregunta", pregunta_id=pregunta.id))
 
@@ -306,3 +324,17 @@ def votar_pregunta(pregunta_id: int):
 def votar_respuesta(respuesta_id: int):
     respuesta = db.get_or_404(Respuesta, respuesta_id)
     return _votar_y_volver(respuesta, respuesta.pregunta_id)
+
+# --- Agente IA ----------------------------------------------------------------
+
+
+@preguntas_bp.post("/<int:pregunta_id>/responder-ia")
+@login_required
+def responder_ia(pregunta_id: int):
+    pregunta = db.get_or_404(Pregunta, pregunta_id)
+    try:
+        agente_service.responder_con_ia(pregunta)
+        flash("El agente IA respondió la pregunta.", "success")
+    except (agente_service.AgenteIAError, Conflicto) as error:
+        flash(str(error), "error")
+    return redirect(url_for("preguntas.detail_pregunta", pregunta_id=pregunta.id))

@@ -4,6 +4,7 @@
     PermissionError -> 403  (no tiene permiso)
     NoEncontrado    -> 404
     Conflicto       -> 409  (por ejemplo, un nombre repetido)
+    AgenteIAError   -> 502  (falló el proveedor de IA)
 """
 
 
@@ -13,3 +14,7 @@ class NoEncontrado(LookupError):
 
 class Conflicto(Exception):
     """La operación choca con el estado actual de los datos."""
+
+
+class AgenteIAError(RuntimeError):
+    """El agente de IA no pudo generar la respuesta."""

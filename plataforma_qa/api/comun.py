@@ -5,7 +5,7 @@ from functools import wraps
 from flask import g, jsonify, request
 
 from plataforma_qa.extensions import db
-from plataforma_qa.services.errores import Conflicto, NoEncontrado
+from plataforma_qa.services.errores import AgenteIAError, Conflicto, NoEncontrado
 
 
 def error(mensaje, codigo):
@@ -27,7 +27,7 @@ def login_required_api(vista):
 def datos_json() -> dict:
     datos = request.get_json(silent=True)
     if not isinstance(datos, dict):
-            raise ValueError("El pedido debe ser un objeto JSON.")  # noqa: TRY004
+        raise ValueError("El pedido debe ser un objeto JSON.")  # noqa: TRY004
     return datos
 
 
@@ -56,3 +56,7 @@ def manejar_errores(blueprint):
     @blueprint.errorhandler(Conflicto)
     def _conflicto(excepcion):
         return error(str(excepcion), 409)
+
+    @blueprint.errorhandler(AgenteIAError)
+    def _falla_ia(excepcion):
+        return error(str(excepcion), 502)

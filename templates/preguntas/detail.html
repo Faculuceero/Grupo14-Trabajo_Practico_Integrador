@@ -94,7 +94,11 @@
       </div>
     </section>
   {% else %}
-    <p>Todavía no hay respuestas.</p>
+    {% if g.user %}
+      <form method="post" action="{{ url_for('preguntas.responder_ia', pregunta_id=pregunta.id) }}">
+        <button type="submit">Pedir respuesta al agente IA</button>
+      </form>
+    {% endif %}
   {% endfor %}
 
   <h3>Tu respuesta</h3>

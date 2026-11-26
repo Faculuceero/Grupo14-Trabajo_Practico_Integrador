@@ -7,7 +7,7 @@
     DELETE /api/preguntas/<id>   borrar (solo el autor)      requiere sesión
 """
 
-from flask import Blueprint, g, jsonify, request, url_for
+from flask import Blueprint, current_app, g, jsonify, request, url_for
 
 from plataforma_qa.api.comun import (
     datos_json,
@@ -16,8 +16,10 @@ from plataforma_qa.api.comun import (
     obtener_o_404,
 )
 from plataforma_qa.models import Pregunta
+from plataforma_qa.services import agente_ia
 from plataforma_qa.services import preguntas as servicio
 from plataforma_qa.services import votos as votos_service
+from plataforma_qa.services.errores import AgenteIAError
 
 preguntas_api_bp = Blueprint("preguntas_api", __name__, url_prefix="/api/preguntas")
 manejar_errores(preguntas_api_bp)
@@ -36,6 +38,19 @@ def a_dict(pregunta):
         "puntuacion": votos_service.puntuacion(pregunta),
         "cantidad_respuestas": len(pregunta.respuestas),
     }
+
+
+def _responder_con_ia_si_corresponde(pregunta):
+    """Si tiene #ia-help y ninguna respuesta, responde el agente IA.
+
+    Si el proveedor falla, la pregunta igual queda guardada (solo se registra el aviso).
+    """
+    try:
+        agente_ia.responder_automaticamente(pregunta)
+    except AgenteIAError as error:
+        current_app.logger.warning(
+            "El agente IA no pudo responder la pregunta %s: %s", pregunta.id, error
+        )
 
 
 @preguntas_api_bp.get("")
@@ -63,6 +78,7 @@ def crear():
         datos.get("categoria_id"),
         datos.get("etiquetas"),
     )
+    _responder_con_ia_si_corresponde(pregunta)
     respuesta = jsonify(a_dict(pregunta))
     respuesta.status_code = 201
     respuesta.headers["Location"] = url_for(
@@ -84,6 +100,7 @@ def modificar(pregunta_id):
         categoria_id=datos.get("categoria_id"),
         etiquetas=datos.get("etiquetas"),
     )
+    _responder_con_ia_si_corresponde(pregunta)
     return jsonify(a_dict(pregunta))
 
 

@@ -41,3 +41,32 @@ Cada archivo `.py` tiene arriba el nombre de su responsable y el issue que le co
 ├── docs/                 diagrama de clases
 └── README.md
 ```
+## Agente de IA
+
+El agente responde preguntas de forma automática:
+- al crear o editar una pregunta con la etiqueta `ia-help`;
+- con el botón **Pedir respuesta al agente IA** (preguntas sin respuestas);
+- con el comando `uv run flask --app plataforma_qa responder-pendientes --minutos 30`,
+  que responde las preguntas sin respuestas publicadas hace al menos esos minutos;
+- por API: `POST /api/preguntas/<id>/respuesta-ia`.
+
+Nunca responde dos veces la misma pregunta. Si el proveedor falla, no se guarda ninguna respuesta.
+
+Se configura con variables de entorno (las claves **nunca** se suben al repositorio):
+
+| Variable | Para qué |
+|---|---|
+| `IA_PROVEEDOR` | `gemini` (por defecto), `openai` o `local` |
+| `GEMINI_API_KEY` / `OPENAI_API_KEY` | clave del proveedor elegido |
+| `IA_AGENTE_NOMBRE` | nombre que se muestra (por defecto "Asistente IA") |
+
+## API de usuarios y autenticación
+
+| Método | Ruta | Qué hace | Sesión |
+|---|---|---|---|
+| POST | `/api/auth/register` | Crea el usuario y abre sesión | No |
+| POST | `/api/auth/login` | Abre sesión | No |
+| POST | `/api/auth/logout` | Cierra sesión | No |
+| GET | `/api/auth/me` | Usuario de la sesión | Sí |
+| GET | `/api/users` · `/api/users/<id>` | Lista / detalle (datos públicos) | No |
+| PATCH | `/api/users/<id>` | Cambiar el propio nombre | Sí |

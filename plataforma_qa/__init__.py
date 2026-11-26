@@ -10,7 +10,11 @@ def create_app(config_class=Config):
 
     db.init_app(app)
 
+    from plataforma_qa.api.categorias import categorias_api_bp
     from plataforma_qa.api.health import health_bp
+    from plataforma_qa.api.preguntas import preguntas_api_bp
+    from plataforma_qa.api.respuestas import respuestas_api_bp
+    from plataforma_qa.api.votos import votos_api_bp
     from plataforma_qa.web.auth import auth_bp
     from plataforma_qa.web.preguntas import preguntas_bp
     from plataforma_qa.web.users import users_bp
@@ -19,5 +23,9 @@ def create_app(config_class=Config):
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
     app.register_blueprint(preguntas_bp)
+    app.register_blueprint(categorias_api_bp)
+    app.register_blueprint(preguntas_api_bp)
+    app.register_blueprint(respuestas_api_bp)
+    app.register_blueprint(votos_api_bp)
 
     return app

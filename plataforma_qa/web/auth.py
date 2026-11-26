@@ -30,7 +30,7 @@ def register():
         name = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
-        rol = request.form.get("rol", "usuario")
+        rol = "usuario"  # el rol admin se asigna con: flask hacer-admin <correo>
 
         if not name or not email or not password:
             flash("Todos los campos son obligatorios.", "error")

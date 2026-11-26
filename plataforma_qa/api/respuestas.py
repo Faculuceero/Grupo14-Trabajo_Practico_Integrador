@@ -4,7 +4,7 @@
     POST   /api/preguntas/<id>/respuestas   responder                       requiere sesión
     GET    /api/respuestas/<id>             detalle                         público
     PATCH  /api/respuestas/<id>             modificar (solo el autor)       requiere sesión
-    DELETE /api/respuestas/<id>             borrar (solo el autor)          requiere sesión
+    DELETE /api/respuestas/<id>             borrar (el autor o un admin)    requiere sesión
     POST   /api/respuestas/<id>/aceptar     aceptar (solo el autor de la pregunta)
 """
 

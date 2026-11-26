@@ -2,6 +2,7 @@
 
 from plataforma_qa.extensions import db
 from plataforma_qa.models import Categoria, Etiqueta, Pregunta
+from plataforma_qa.services.permisos import es_admin
 from plataforma_qa.services.validacion import (
     MAX_TITULO,
     normalizar_etiquetas,
@@ -10,8 +11,13 @@ from plataforma_qa.services.validacion import (
 
 
 def puede_modificar(pregunta, usuario) -> bool:
-    """Solo el autor modifica o borra su pregunta."""
+    """Solo el autor edita su pregunta."""
     return usuario is not None and pregunta.user_id == usuario.id
+
+
+def puede_borrar(pregunta, usuario) -> bool:
+    """El autor borra la suya; el admin puede borrar cualquiera."""
+    return es_admin(usuario) or puede_modificar(pregunta, usuario)
 
 
 def _categoria(categoria_id) -> Categoria:
@@ -92,7 +98,7 @@ def modificar_pregunta(
 
 
 def borrar_pregunta(pregunta, solicitante) -> None:
-    if not puede_modificar(pregunta, solicitante):
-        raise PermissionError("Solo el autor puede borrar la pregunta.")
+    if not puede_borrar(pregunta, solicitante):
+        raise PermissionError("Solo el autor o un administrador pueden borrar la pregunta.")
     db.session.delete(pregunta)
     db.session.commit()

@@ -2,12 +2,12 @@
 
     GET    /api/categorias          lista                    público
     GET    /api/categorias/<id>     detalle                  público
-    POST   /api/categorias          crear                    requiere sesión
-    PATCH  /api/categorias/<id>     renombrar                requiere sesión
-    DELETE /api/categorias/<id>     borrar (si no tiene preguntas)   requiere sesión
+    POST   /api/categorias          crear                    solo admin
+    PATCH  /api/categorias/<id>     renombrar                solo admin
+    DELETE /api/categorias/<id>     borrar (si no tiene preguntas)   solo admin
 """
 
-from flask import Blueprint, jsonify, url_for
+from flask import Blueprint, g, jsonify, url_for
 
 from plataforma_qa.api.comun import (
     datos_json,
@@ -39,7 +39,7 @@ def detalle(categoria_id):
 @categorias_api_bp.post("")
 @login_required_api
 def crear():
-    categoria = servicio.crear_categoria(datos_json().get("nombre"))
+    categoria = servicio.crear_categoria(g.user, datos_json().get("nombre"))
     respuesta = jsonify(a_dict(categoria))
     respuesta.status_code = 201
     respuesta.headers["Location"] = url_for(
@@ -52,12 +52,14 @@ def crear():
 @login_required_api
 def modificar(categoria_id):
     categoria = obtener_o_404(Categoria, categoria_id, "la categoría")
-    servicio.modificar_categoria(categoria, datos_json().get("nombre"))
+    servicio.modificar_categoria(g.user, categoria, datos_json().get("nombre"))
     return jsonify(a_dict(categoria))
 
 
 @categorias_api_bp.delete("/<int:categoria_id>")
 @login_required_api
 def borrar(categoria_id):
-    servicio.borrar_categoria(obtener_o_404(Categoria, categoria_id, "la categoría"))
+    servicio.borrar_categoria(
+        g.user, obtener_o_404(Categoria, categoria_id, "la categoría")
+    )
     return "", 204

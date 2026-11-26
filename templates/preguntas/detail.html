@@ -50,10 +50,14 @@
   <hr>
 
   <div>
-    <a href="{{ url_for('preguntas.edit_pregunta', pregunta_id=pregunta.id) }}">Editar pregunta</a>
-    <form method="post" action="{{ url_for('preguntas.delete_pregunta', pregunta_id=pregunta.id) }}" style="display:inline;">
-      <button type="submit" onclick="return confirm('¿Eliminar esta pregunta?');">Eliminar pregunta</button>
-    </form>
+    {% if puede_editar_pregunta(pregunta, g.user) %}
+      <a href="{{ url_for('preguntas.edit_pregunta', pregunta_id=pregunta.id) }}">Editar pregunta</a>
+    {% endif %}
+    {% if puede_borrar_pregunta(pregunta, g.user) %}
+      <form method="post" action="{{ url_for('preguntas.delete_pregunta', pregunta_id=pregunta.id) }}" style="display:inline;">
+        <button type="submit" onclick="return confirm('¿Eliminar esta pregunta?');">Eliminar pregunta</button>
+      </form>
+    {% endif %}
     <a href="{{ url_for('preguntas.list_preguntas') }}">Volver al listado</a>
   </div>
 
@@ -87,6 +91,8 @@
         {% endif %}
         {% if puede_modificar(r, g.user) %}
           <a href="{{ url_for('preguntas.edit_respuesta', respuesta_id=r.id) }}">Editar</a>
+        {% endif %}
+        {% if puede_borrar(r, g.user) %}
           <form method="post" action="{{ url_for('preguntas.delete_respuesta', respuesta_id=r.id) }}" style="display:inline;">
             <button type="submit" onclick="return confirm('¿Eliminar esta respuesta?');">Eliminar</button>
           </form>
@@ -94,6 +100,7 @@
       </div>
     </section>
   {% else %}
+    <p>Todavía no hay respuestas.</p>
     {% if g.user %}
       <form method="post" action="{{ url_for('preguntas.responder_ia', pregunta_id=pregunta.id) }}">
         <button type="submit">Pedir respuesta al agente IA</button>

@@ -37,6 +37,16 @@
     <p>{{ pregunta.cuerpo }}</p>
   </div>
 
+  <p>
+    <strong>Puntuación:</strong> {{ puntuacion(pregunta) }}
+    {% if g.user %}
+      <form method="post" action="{{ url_for('preguntas.votar_pregunta', pregunta_id=pregunta.id) }}" style="display:inline;">
+        <button type="submit" name="valor" value="1">▲ +1</button>
+        <button type="submit" name="valor" value="-1">▼ −1</button>
+      </form>
+    {% endif %}
+  </p>
+
   <hr>
 
   <div>
@@ -60,6 +70,15 @@
         {% if r.es_aceptada %}<span class="badge-aceptada">✔ Respuesta aceptada</span>{% endif %}
       </p>
       <p class="texto-multilinea">{{ r.cuerpo }}</p>
+      <p>
+        <strong>Puntuación:</strong> {{ puntuacion(r) }}
+        {% if g.user %}
+          <form method="post" action="{{ url_for('preguntas.votar_respuesta', respuesta_id=r.id) }}" style="display:inline;">
+            <button type="submit" name="valor" value="1">▲ +1</button>
+            <button type="submit" name="valor" value="-1">▼ −1</button>
+          </form>
+        {% endif %}
+      </p>
       <div>
         {% if puede_aceptar(pregunta, g.user) and not r.es_aceptada %}
           <form method="post" action="{{ url_for('preguntas.accept_respuesta', respuesta_id=r.id) }}" style="display:inline;">

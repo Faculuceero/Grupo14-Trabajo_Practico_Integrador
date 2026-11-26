@@ -12,6 +12,7 @@ from flask import (
 from plataforma_qa.extensions import db
 from plataforma_qa.models import Categoria, Etiqueta, Pregunta, Respuesta, User
 from plataforma_qa.services import respuestas as respuestas_service
+from plataforma_qa.services import votos as votos_service
 from plataforma_qa.web.acceso import login_required
 
 preguntas_bp = Blueprint("preguntas", __name__, url_prefix="/preguntas")
@@ -153,6 +154,7 @@ def detail_pregunta(pregunta_id: int):
         respuestas=respuestas,
         puede_aceptar=respuestas_service.puede_aceptar,
         puede_modificar=respuestas_service.puede_modificar,
+        puntuacion=votos_service.puntuacion,
     )
 
 
@@ -280,3 +282,27 @@ def accept_respuesta(respuesta_id: int):
     return redirect(
         url_for("preguntas.detail_pregunta", pregunta_id=respuesta.pregunta_id)
     )
+
+# --- Votos --------------------------------------------------------------------
+
+
+def _votar_y_volver(publicacion, pregunta_id: int):
+    try:
+        votos_service.votar(publicacion, g.user, request.form.get("valor", type=int))
+    except ValueError as error:
+        flash(str(error), "error")
+    return redirect(url_for("preguntas.detail_pregunta", pregunta_id=pregunta_id))
+
+
+@preguntas_bp.post("/<int:pregunta_id>/votar")
+@login_required
+def votar_pregunta(pregunta_id: int):
+    pregunta = db.get_or_404(Pregunta, pregunta_id)
+    return _votar_y_volver(pregunta, pregunta.id)
+
+
+@preguntas_bp.post("/respuestas/<int:respuesta_id>/votar")
+@login_required
+def votar_respuesta(respuesta_id: int):
+    respuesta = db.get_or_404(Respuesta, respuesta_id)
+    return _votar_y_volver(respuesta, respuesta.pregunta_id)
